@@ -1,15 +1,4 @@
 
-// Задача проект личный кабинет
-// пользователь может зарегистрироваться на странице сайта
-// вводит пароль и логин
-// если такой пользователя нет в вашем массиве пользователей 
-// то запишите в локал сторедж его данные об авторизации
-// если в лк есть запись о пользователе значит он авторизован
-// и показывает ему личный кабинет
-// к кибенете выводятся его данные имя логин
-// также должна быть кнопка выхода
-// при нажатии на нее удаляем пользователя в лк и он снова видит форму входа
-
 let users = [
     {
         login: "111",
@@ -21,6 +10,20 @@ let users = [
         password: "222"
     },
 ];
+
+
+const storedUsers = localStorage.getItem("usersList");
+if (storedUsers) {
+    users = JSON.parse(storedUsers);
+}
+window.addEventListener('DOMContentLoaded', () => {
+    const sessionUser = localStorage.getItem("currentUser");
+    if (sessionUser) {
+        // Если данные есть, скрываем форму входа и рисуем ЛК
+        div_vhod.style.display = "none";
+        create_lc(JSON.parse(sessionUser));
+    }
+});
 
 const title = document.createElement("h1");
 title.textContent = "🎄 Новогодний вход 2026 ❄️";
@@ -56,17 +59,20 @@ button_vhod.addEventListener("click", () => {
     const inputlogin = login.value;
     const inputpassword = password.value;
 
+    // Ищем пользователя в актуальном массиве
     const foundUser = users.find(user => user.login === inputlogin && user.password === inputpassword);
+
     if (foundUser) {
         alert("Вход выполнен успешно!");
-        div_vhod.style.display = "none"; // Скрываем, но не удаляем
-        create_lc(foundUser);
+        // ЗАПОМИНАЕМ: сохраняем объект пользователя в localStorage
+        localStorage.setItem("isAuth", JSON.stringify(foundUser));
 
+        div_vhod.style.display = "none";
+        create_lc(foundUser);
     } else {
         alert("Неверный логин или пароль!");
     }
-
-})
+});
 
 const registr = document.createElement("button")
 registr.classList = "registr"
@@ -76,22 +82,25 @@ registr.textContent = "🎁 Регистрация"
 registr.addEventListener("click", () => {
     const addlogin = login.value;
     const addpassword = password.value;
-    if (addlogin && addpassword) {
-        users.push({
-            login: addlogin,
-            password: addpassword
-        })
-        localStorage.setItem("users", JSON.stringify(users));
 
-        alert("пользователь добавлен и сохранен!")
-        console.log("Текущая база в LS:", JSON.parse(localStorage.getItem("users")));
+    // Проверка, нет ли уже такого логина
+    const exists = users.some(u => u.login === addlogin);
 
-        login.value = ""
-        password.value = ""
+    if (addlogin && addpassword && !exists) {
+        users.push({ login: addlogin, password: addpassword });
+
+        // Сохраняем обновленный список всех пользователей
+        localStorage.setItem("usersList", JSON.stringify(users));
+
+        alert("Регистрация успешна! Теперь войдите.");
+        login.value = "";
+        password.value = "";
+    } else if (exists) {
+        alert("Такой пользователь уже существует!");
     } else {
         alert('Заполните оба поля!');
     }
-})
+});
 
 
 
@@ -127,12 +136,12 @@ function create_lc(userData) {
     button_exit.classList = "button_exit"
     button_exit.textContent = "Выход"
     button_exit.addEventListener("click", () => {
-        div_personal_account.remove();    
-        div_vhod.style.display = "block"; 
+        localStorage.removeItem("isAuth"); // УДАЛЯЕМ метку входа
+        div_personal_account.remove();
+        div_vhod.style.display = "block";
         login.value = "";
         password.value = "";
-
-    })
+    });
 
     div_personal_account.appendChild(personal_account_data)
     personal_account_data.appendChild(personal_account_login)
@@ -140,6 +149,7 @@ function create_lc(userData) {
     div_personal_account.appendChild(button_exit)
     document.body.appendChild(div_personal_account)
 }
+
 
 
 
@@ -159,10 +169,10 @@ function createSnow() {
 // Новая функция создания падающих елок
 function createFallingTree() {
     const tree = document.createElement('div');
-    const treeEmojis = ['🎄', '🌲', '🎁', '🌟']; 
+    const treeEmojis = ['🎄', '🌲', '🎁', '🌟'];
     tree.innerHTML = treeEmojis[Math.floor(Math.random() * treeEmojis.length)];
     // Елки будут крупнее и падать чуть дольше
-    setupFallingElement(tree, '20px 40px', 5000, 10000); 
+    setupFallingElement(tree, '20px 40px', 5000, 10000);
 }
 
 // Вспомогательная функция для настройки общего поведения падения
@@ -170,13 +180,13 @@ function setupFallingElement(element, fontSizeRange, duration, timeout) {
     element.style.position = 'fixed';
     element.style.left = Math.random() * 100 + 'vw';
     element.style.top = '-50px'; // Начинаем падение выше экрана
-   element.style.opacity = Math.random() * 0.6;
-    
+    element.style.opacity = Math.random() * 0.6;
+
     // Генерируем случайный размер из диапазона
     const minSize = parseInt(fontSizeRange.split(' ')[0]);
     const maxSize = parseInt(fontSizeRange.split(' ')[1]);
     element.style.fontSize = Math.random() * (maxSize - minSize) + minSize + 'px';
-    
+
     element.style.zIndex = '1000';
     element.style.pointerEvents = 'none';
     document.body.appendChild(element);
@@ -197,8 +207,20 @@ function setupFallingElement(element, fontSizeRange, duration, timeout) {
 }
 
 
-setInterval(createSnow, 200);        
+setInterval(createSnow, 200);
 setInterval(createFallingTree, 800);
 
 setInterval(createSnow, 200);
 
+const savedUser = localStorage.getItem("isAuth");
+
+if (savedUser) {
+    // Если нашли — парсим строку обратно в объект
+    const userObj = JSON.parse(savedUser);
+    
+    // Скрываем форму входа сразу
+    div_vhod.style.display = "none";
+    
+    // Отрисовываем личный кабинет
+    create_lc(userObj);
+}
