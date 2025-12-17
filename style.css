@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@import url('fonts.googleapis.com');
+
+body {
+    background: radial-gradient(circle, #1a2a6c, #b21f1f, #fdbb2d);
+    /* Праздничный градиент */
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    color: white;
+    font-family: 'Lobster', cursive;
+
+}
+
+button {
+    cursor: pointer;
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    font-family: 'Lobster', cursive;
+
+}
+
+/* Вход: */
+.enter {
+    background: rgba(255, 255, 255, 0.1);
+    /* Стеклянный эффект (Glassmorphism) */
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    text-align: center;
+
+}
+
+.enter_inputs {
+    width: 250px;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+    font-family: 'Lobster', cursive;
+    margin: 4px;
+
+}
+
+.vhod {
+    background: #e74c3c;
+    color: white;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    font-family: 'Lobster', cursive;
+
+}
+
+
+.registr {
+    background: #e74c3c;
+    color: white;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+    font-family: 'Lobster', cursive;
+
+}
+
+.vhod:hover,
+.registr:hover {
+    transform: scale(1.1) rotate(-2deg);
+    /* Кнопка слегка покачивается */
+    background: #c0392b;
+    font-family: 'Lobster', cursive;
+
+}
+
+/* личный кабинет: */
+
+.personal_account {
+    background: rgba(255, 255, 255, 0.1);
+    /* Стеклянный эффект (Glassmorphism) */
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    text-align: center;
+    font-family: 'Lobster', cursive;
+
+
+}
+
+.personal_account_data {
+    font-size: 40px;
+    color: white;
+    font-family: 'Lobster', cursive;
+
+
+}
+
+.button_exit {
+    background: #f1c40f;
+    color: #2c3e50;
+    font-family: 'Lobster', cursive;
+
+}
+
+.button_exit:hover {
+    transform: scale(1.1) rotate(-2deg);
+    /* Кнопка слегка покачивается */
+    background: #c0392b;
+    font-family: 'Lobster', cursive;
+
+}
+
+@keyframes blink {
+    0% { opacity: 1; filter: brightness(100%) drop-shadow(0 0 5px #fff); }
+    50% { opacity: 0.3; filter: brightness(150%) drop-shadow(0 0 20px #ff0000); }
+    100% { opacity: 1; filter: brightness(100%) drop-shadow(0 0 5px #fff); }
+}
+
+.blink-title {
+    animation: blink 1.5s infinite; /* 1.5 секунды на один цикл, повторять бесконечно */
+}
